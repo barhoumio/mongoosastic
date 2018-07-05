@@ -16,7 +16,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(errorhandler());
 
 // Model
-mongoose.connect('mongodb://localhost/silly-blog', function(err) {
+mongoose.connect('mongodb://localhost:27017/silly-blog', function(err) {
   if (err) {
     console.error(err);
   }

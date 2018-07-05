@@ -76,7 +76,7 @@ describe('Index Method', function () {
     }, function (err, doc) {
       doc.message = 'I know taebo!'
       doc.index({
-        index: 'public_tweets',
+        index: 'tweet_utterings',
         type: 'utterings'
       }, function () {
         setTimeout(function () {
@@ -85,13 +85,13 @@ describe('Index Method', function () {
               query: 'know'
             }
           }, {
-            index: 'public_tweets',
+            index: 'tweet_utterings',
             type: 'utterings'
           }, function (err1, res) {
             res.hits.hits[0]._source.message.should.eql('I know taebo!')
             done()
           })
-        }, config.INDEXING_TIMEOUT)
+        }, config.INDEXING_TIMEOUT + 1000)
       })
     })
   })

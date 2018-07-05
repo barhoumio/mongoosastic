@@ -1,18 +1,18 @@
 # Contributing
 Pull requests are always welcome as long as an accompanying test case is
-associated. 
+associated.
 
 This project is configured to use [git
 flow](https://github.com/nvie/gitflow/) and the following conventions
 are used:
 
 * ``develop`` - represents current active development and can possibly be
-  unstable. 
+  unstable.
 * ``master`` - pristine copy of repository, represents the currently
   stable release found in the npm index.
 * ``feature/**`` - represents a new feature being worked on
 
-If you wish to contribute, the only requirement is to: 
+If you wish to contribute, the only requirement is to:
 
 - branch a new feature branch from develop (if you're working on an
   issue, prefix it with the issue number)
@@ -21,7 +21,7 @@ If you wish to contribute, the only requirement is to:
 
 Although I use git flow and prefix feature branches with "feature/" I
 don't require this for pull requests... all I care is that the feature
-branch name makes sense. 
+branch name makes sense.
 
 Pulls requests against master or pull requests branched from master will
 be rejected.
@@ -50,4 +50,4 @@ In order to run the tests you will need:
 * [mocha](http://visionmedia.github.com/mocha/)
 
 With those installed, running ''npm test'' will run the tests with the
-preferred timeout (which is extended for integration tests. 
+preferred timeout (which is extended for integration tests.

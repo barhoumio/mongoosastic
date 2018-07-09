@@ -18,7 +18,7 @@ const Text = mongoose.model('Text', TextSchema)
 describe('Highlight search', function () {
   const responses = [
     'You don\'t see people at their best in this job, said <em>Death</em>.',
-    'The <em>death</em> of the warrior or the old man or the little child, this I understand, and I take away the pain',
+    'The <em>death</em> of the warrior or the old man or the little child, this I understand',
     'I do not understand this <em>death</em>-of-the-mind',
     'The only reason for walking into the jaws of <em>Death</em> is so\'s you can steal his gold teeth'
   ]
@@ -35,8 +35,7 @@ describe('Highlight search', function () {
             }),
             new Text({
               title: 'The Light Fantastic',
-              quote: 'The death of the warrior or the old man or the little child, this I understand, and I take ' +
-                'away the pain and end the suffering. I do not understand this death-of-the-mind'
+              quote: 'The death of the warrior or the old man or the little child, this I understand'
             }),
             new Text({
               title: 'Equal Rites',

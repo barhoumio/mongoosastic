@@ -31,11 +31,11 @@
     "istanbul": "0.4.5",
     "mocha": "5.2.0",
     "should": "13.2.1",
-    "mongoose": "5.2.1",
+    "mongoose": "5.2.2",
     "standard": "11.0.1"
   },
   "engines": {
-    "node": ">= 4.0"
+    "node": ">= 6.0"
   },
   "scripts": {
     "authors": "./scripts/update_authors.sh",

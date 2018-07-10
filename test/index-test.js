@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const should = require('should')
 const elasticsearch = require('elasticsearch')
 const esClient = new elasticsearch.Client({
-  host: 'localhost:9200',
+  host: 'localhost:9201',
   deadTimeout: 0,
   keepAlive: false
 })
@@ -51,9 +51,17 @@ const PersonSchema = new Schema({
       es_indexed: true
     },
     died: {
-      type: Number,
-      es_indexed: true
+      type: Number
     }
+  },
+  custom: {},
+  statusLog: {
+    type: [new mongoose.Schema({status: String, date: {type: Date}}, {
+      _id: false,
+      timestamp: false
+    })],
+    es_indexed: false,
+    default: () => ({status: String, date: new Date()})
   }
 })
 
@@ -108,22 +116,68 @@ describe('indexing', function () {
   })
 
   describe('Creating Index', function () {
-    it('should create index if none exists', function (done) {
+    /* it('should create index if none exists', function (done) {
       Tweet.createMapping(function (err, response) {
         should.exists(response)
         response.should.not.have.property('error')
         done()
       })
-    })
+    }) */
 
     it('should create index with settings if none exists', function (done) {
       Tweet.createMapping({
-        analysis: {
-          analyzer: {
-            stem: {
-              tokenizer: 'standard',
-              filter: ['standard', 'lowercase', 'stop', 'porter_stem']
-            }
+        mappings: {
+          tweet: {
+            dynamic_templates: [
+              {
+                ngrams_strings: {
+                  match_mapping_type: 'string',
+                  mapping: {
+                    type: 'text',
+                    analyzer: 'autocomplete',
+                    search_analyzer: 'autocomplete_search',
+                    fields: {
+                      raw: {
+                        type: 'string',
+                        index: 'not_analyzed'
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        settings: {
+          analysis: {
+            analyzer: {
+              autocomplete: {
+                tokenizer: 'autocomplete',
+                filter: [
+                  'lowercase',
+                  'asciifolding'
+                ]
+              },
+              autocomplete_search: {
+                tokenizer: 'lowercase',
+                filter: [
+                  'lowercase',
+                  'asciifolding'
+                ]
+              }
+            },
+            tokenizer: {
+              autocomplete: {
+                type: 'edge_ngram',
+                min_gram: 1,
+                max_gram: 20,
+                token_chars: [
+                  'letter'
+                ]
+              }
+            },
+            number_of_shards: 1,
+            number_of_replicas: 0
           }
         }
       }, function (err, response) {
@@ -133,7 +187,7 @@ describe('indexing', function () {
       })
     })
 
-    it('should update index if one already exists', function (done) {
+    /* it('should update index if one already exists', function (done) {
       Tweet.createMapping(function (err, response) {
         response.should.not.have.property('error')
         done()
@@ -142,7 +196,7 @@ describe('indexing', function () {
 
     after(function (done) {
       config.deleteIndexIfExists(['tweets', 'talks', 'people'], done)
-    })
+    }) */
   })
 
   describe('Default plugin', function () {
@@ -306,7 +360,7 @@ describe('indexing', function () {
     it('should queue for later removal if not in index', function (done) {
       // behavior here is to try 3 times and then give up.
       var tweet = new Tweet()
-      var opts = { tries: 2 }
+      var opts = {tries: 2}
       var triggerRemoved = false
 
       tweet.on('es-removed', function (err, res) {

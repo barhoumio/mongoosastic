@@ -157,7 +157,7 @@ describe('MappingGenerator', function () {
         telephone: {
           type: String
         },
-        keys: {type: [String], es_indexed: false},
+        keys: {type: [String]},
         tags: {
           type: [String],
           es_indexed: true
@@ -172,6 +172,15 @@ describe('MappingGenerator', function () {
         contact: {
           type: ContactSchema,
           select: false
+        },
+        custom: {},
+        statusLog: {
+          type: [new mongoose.Schema({status: String, date: {type: Date}}, {
+            _id: false,
+            timestamp: false
+          })],
+          es_indexed: false,
+          default: () => ({status: String, date: new Date()})
         }
       }), function (err, mapping) {
         mapping.properties.name.type.should.eql('text')
@@ -467,10 +476,13 @@ describe('MappingGenerator', function () {
         lastName: String
       })
       generator.generateMapping(new Schema({
-        name: {type: Schema.Types.ObjectId, ref: 'Name', es_schema: Name}
+        other: String,
+        name: {type: Schema.Types.ObjectId, ref: 'Name', es_schema: Name, es_indexed: true}
       }), function (err, mapping) {
+        console.log({err, mapping: JSON.stringify(mapping)})
         mapping.properties.name.properties.firstName.type.should.eql('text')
         mapping.properties.name.properties.lastName.type.should.eql('text')
+        mapping.properties.other.type.should.eql('text')
         done()
       })
     })
@@ -481,9 +493,11 @@ describe('MappingGenerator', function () {
         lastName: String
       })
       generator.generateMapping(new Schema({
+        other: String,
         name: {type: Schema.Types.ObjectId, ref: 'Name', es_schema: Name, es_select: 'firstName'}
       }), function (err, mapping) {
         mapping.properties.name.properties.firstName.type.should.eql('text')
+        mapping.properties.other.type.should.eql('text')
         should.not.exist(mapping.properties.name.properties.lastName)
         done()
       })

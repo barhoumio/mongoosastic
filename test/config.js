@@ -2,7 +2,7 @@
 
 const elasticsearch = require('elasticsearch')
 const esClient = new elasticsearch.Client({
-  host: 'localhost:9200',
+  host: 'localhost:9201',
   deadTimeout: 0,
   keepAlive: false
 })

@@ -11,13 +11,23 @@ node_js:
 - lts/*
 - stable
 sudo: false
-
+dist: trusty
 services:
   - mongodb
   - elasticsearch
 
 env:
-  - BULK_ACTION_TIMEOUT=30000 INDEXING_TIMEOUT=3000 CXX=g++-4.8
+  - CC=gcc-4.8 CXX=g++-4.8
+
+before_install:
+- |
+  if [[ ${TRAVIS_OS_NAME} == osx ]]; then
+   export CXX=clang
+   export CC=clang
+  fi
+- "$CC --version"
+- "$CXX --version"
+- env
 
 addons:
   apt:

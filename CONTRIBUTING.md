@@ -45,7 +45,7 @@ Feel free to ping me if you need help! :)
 ## Running Tests
 In order to run the tests you will need:
 
-* An elasticsearch server running on port 9201
+* An elasticsearch server running on port 9200
 * A mongodb server
 * [mocha](http://visionmedia.github.com/mocha/)
 

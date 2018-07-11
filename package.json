@@ -40,8 +40,8 @@
   "scripts": {
     "authors": "./scripts/update_authors.sh",
     "lint": "eslint lib test --fix",
-    "mocha": "mocha test/ref-test.js --exit",
-    "test": "npm run lint && istanbul cover _mocha --report lcovonly -- test/index-test.js --exit",
+    "mocha": "mocha test/*-test.js --exit",
+    "test": "npm run lint && istanbul cover _mocha --report lcovonly -- test/*-test.js --exit",
     "coverage": "cat ./coverage/lcov.info | coveralls",
     "changelog": "changelog mongoosastic/mongoosastic latest -m"
   },

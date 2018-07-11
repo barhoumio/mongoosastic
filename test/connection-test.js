@@ -72,7 +72,7 @@ describe('Elasticsearch Connection', function () {
   it('should be able to connect with explicit options', function (done) {
     DummySchema.plugin(mongoosastic, {
       host: 'localhost',
-      port: 9201
+      port: 9200
     })
 
     const Dummy3 = mongoose.model('Dummy3', DummySchema, 'dummys')
@@ -83,8 +83,8 @@ describe('Elasticsearch Connection', function () {
   it('should be able to connect with an array of hosts', function (done) {
     DummySchema.plugin(mongoosastic, {
       hosts: [
-        'localhost:9201',
-        'localhost:9201'
+        'localhost:9200',
+        'localhost:9200'
       ]
     })
 
@@ -95,7 +95,7 @@ describe('Elasticsearch Connection', function () {
 
   it('should be able to connect with an existing elasticsearch client', function (done) {
     const esClient = new elasticsearch.Client({
-      host: 'localhost:9201'
+      host: 'localhost:9200'
     })
 
     esClient.ping({

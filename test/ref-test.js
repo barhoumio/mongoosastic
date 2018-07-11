@@ -5,7 +5,7 @@ const should = require('should')
 const async = require('async')
 const elasticsearch = require('elasticsearch')
 const esClient = new elasticsearch.Client({
-  host: 'localhost:9201',
+  host: 'localhost:9200',
   deadTimeout: 0,
   keepAlive: false
 })

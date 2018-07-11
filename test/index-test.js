@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const should = require('should')
 const elasticsearch = require('elasticsearch')
 const esClient = new elasticsearch.Client({
-  host: 'localhost:9201',
+  host: 'localhost:9200',
   deadTimeout: 0,
   keepAlive: false
 })
@@ -175,10 +175,10 @@ describe('indexing', function () {
                   'letter'
                 ]
               }
-            },
-            number_of_shards: 1,
-            number_of_replicas: 0
-          }
+            }
+          },
+          number_of_shards: 1,
+          number_of_replicas: 0
         }
       }, function (err, response) {
         should.exists(response)

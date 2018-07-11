@@ -164,9 +164,16 @@ describe('MappingGenerator', function () {
         }
       })
 
+      const UserSchema = new Schema({
+        name: {type: String}
+      })
+
       generator.generateMapping(new Schema({
         name: {
-          type: String,
+          type: new mongoose.Schema({
+            fr: {type: String, required: true, index: true},
+            en: {type: String, required: true, index: true}
+          }),
           es_indexed: true
         },
         contact: {
@@ -181,13 +188,57 @@ describe('MappingGenerator', function () {
           })],
           es_indexed: false,
           default: () => ({status: String, date: new Date()})
-        }
+        },
+        user: {type: String, es_indexed: true},
+        userId: {type: Number, es_indexed: true},
+        post_date: {type: Date, es_indexed: true},
+        message: String,
+        logs: {
+          type: [new mongoose.Schema({status: {type: String, es_indexed: true}, date: Date}, {
+            _id: false,
+            timestamp: false
+          })]
+        },
+        log: {
+          type: new mongoose.Schema({status: String, date: Date}, {
+            _id: false,
+            timestamp: false
+          }),
+          es_indexed: false
+        },
+        nested: {
+          type: [new Schema({
+            name: {
+              type: String
+            }
+          })],
+          es_indexed: true,
+          es_type: 'nested',
+          es_include_in_parent: true
+        },
+        author: {type: Schema.Types.ObjectId, ref: 'User', es_schema: UserSchema, es_indexed: true},
+        otherAuthor: {type: Schema.Types.ObjectId, ref: 'User', es_indexed: true},
+        customsData: {}
       }), function (err, mapping) {
-        mapping.properties.name.type.should.eql('text')
+        mapping.properties.name.properties.fr.type.should.eql('text')
         mapping.properties.contact.properties.email.type.should.eql('text')
         mapping.properties.contact.properties.tags.type.should.eql('text')
         mapping.properties.contact.properties.should.not.have.property('telephone')
         mapping.properties.contact.properties.should.not.have.property('keys')
+        mapping.properties.user.type.should.eql('text')
+        mapping.properties.userId.type.should.eql('double')
+        mapping.properties.post_date.type.should.eql('date')
+        mapping.properties.logs.properties.status.type.should.eql('text')
+        mapping.properties.nested.type.should.eql('nested')
+        mapping.properties.nested.properties.name.type.should.eql('text')
+        mapping.properties.nested.properties._id.type.should.eql('text')
+        mapping.properties.nested.include_in_parent.should.eql(true)
+        mapping.properties.author.properties.name.type.should.eql('text')
+        mapping.properties.author.properties._id.type.should.eql('text')
+        mapping.properties.otherAuthor.type.should.eql('text')
+        mapping.properties.should.not.have.property('custom')
+        mapping.properties.should.not.have.property('statusLog')
+        mapping.properties.should.not.have.property('log')
         done()
       })
     })
@@ -479,7 +530,6 @@ describe('MappingGenerator', function () {
         other: String,
         name: {type: Schema.Types.ObjectId, ref: 'Name', es_schema: Name, es_indexed: true}
       }), function (err, mapping) {
-        console.log({err, mapping: JSON.stringify(mapping)})
         mapping.properties.name.properties.firstName.type.should.eql('text')
         mapping.properties.name.properties.lastName.type.should.eql('text')
         mapping.properties.other.type.should.eql('text')

@@ -12,11 +12,13 @@ const UserSchema = new Schema({
 
 const TweetSchema = new Schema({
   name: {
-    type: {
-      fr: {type: String},
-      en: {type: String},
-      es: {type: String, es_indexed: true}
-    },
+    type: new mongoose.Schema({
+      fr: {type: String, required: true, index: true},
+      en: {type: String, required: true, index: true}
+    }, {
+      _id: false,
+      timestamp: false
+    }),
     es_indexed: true
   },
   user: {type: String, es_indexed: true},
@@ -46,7 +48,7 @@ const TweetSchema = new Schema({
     es_include_in_parent: true
   },
   author: {type: Schema.Types.ObjectId, ref: 'User', es_schema: UserSchema, es_indexed: true},
-  otherAuthor: {type: Schema.Types.ObjectId, ref: 'User'},
+  otherAuthor: {type: Schema.Types.ObjectId, ref: 'User', es_indexed: true},
   customsData: {}
 })
 
